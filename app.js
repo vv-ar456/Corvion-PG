@@ -4,80 +4,85 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// get amount
+// Get amount
 function getAmount(){
-let params=new URLSearchParams(window.location.search);
+let params = new URLSearchParams(window.location.search);
 return params.get("amount");
 }
 
 // UPI link
 function getUPI(){
-let amt=getAmount();
+let amt = getAmount();
 return "upi://pay?pa=7606991266@fam&pn=Corvion&am="+amt+"&cu=INR";
 }
 
 // Pay via UPI
 function payUPI(){
-window.location.href=getUPI();
+window.location.href = getUPI();
 }
 
 // Generate QR
 function generateQR(){
-let qr="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="+encodeURIComponent(getUPI());
-document.getElementById("qr").src=qr;
+let qr = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="+encodeURIComponent(getUPI());
+document.getElementById("qr").src = qr;
 }
 
-// ✅ Submit + Save + Redirect
+// Submit data
 async function submitData(){
 
-let utr=document.getElementById("utr").value.trim();
-let file=document.getElementById("file").files[0];
+let utr = document.getElementById("utr").value.trim();
+let file = document.getElementById("file").files[0];
 
-// validation
+// Validation
 if(!utr && !file){
-alert("Please enter UTR OR upload screenshot");
+alert("Enter UTR or upload screenshot");
 return;
 }
 
-let imageUrl="";
+let imageUrl = "";
 
-// upload image
+// Upload image
 if(file){
-let fileName=Date.now()+"_"+file.name;
 
-let { data, error } = await supabaseClient.storage
+let fileName = Date.now() + "_" + file.name;
+
+let { error } = await supabaseClient.storage
 .from("payments")
 .upload(fileName, file);
 
 if(error){
-alert("Image upload failed ❌");
+alert("Upload error: " + error.message);
 return;
 }
 
-// generate public URL
-imageUrl = SUPABASE_URL + "/storage/v1/object/public/payments/" + fileName;
+// Get public URL
+let { data } = supabaseClient.storage
+.from("payments")
+.getPublicUrl(fileName);
+
+imageUrl = data.publicUrl;
 }
 
-// insert data
+// Insert data
 let { error } = await supabaseClient
 .from("payments")
 .insert([{
-time:new Date().toISOString(),
-utr:utr,
-image:imageUrl
+time: new Date().toISOString(),
+utr: utr,
+image: imageUrl
 }]);
 
 if(error){
-alert("Submission failed ❌");
+alert("Database error: " + error.message);
 return;
 }
 
-// success message
+// Success
 alert("Payment Submitted Successfully ✅");
 
-// redirect to home
+// Redirect
 setTimeout(()=>{
-window.location.href="index.html";
+window.location.href = "index.html";
 },2000);
 
 }
