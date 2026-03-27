@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+
+<body>
+
+<header>
+<img src="logo.png" class="logo">
+</header>
+
+<img src="logo.png" class="watermark">
+
+<div class="container">
+
+<h2>Enter Payment Amount</h2>
+
+<input type="number" id="amount" placeholder="Enter amount">
+
+<p class="note">
+This page will be removed in the main website. This is only for demo purpose.
+</p>
+
+<br>
+
+<button onclick="goNext()">Proceed</button>
+
+</div>
+
+<script>
+
+function goNext(){
+let amt=document.getElementById("amount").value;
+
+if(amt==""){
+alert("Enter amount");
+return;
+}
+
+window.location.href="pay.html?amount="+amt;
+}
+
+</script>
+
+</body>
+</html>
