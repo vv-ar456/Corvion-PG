@@ -1,6 +1,6 @@
 // Supabase config
 const SUPABASE_URL = "https://fsunuzocjcunvrjzyckn.supabase.co";
-const SUPABASE_KEY = "YOUR_ANON_KEY"; // paste key here
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzdW51em9jamN1bnZyanp5Y2tuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MDI1NTQsImV4cCI6MjA5MDE3ODU1NH0._xrZ7bTsixv_mA4DsF3LnDRIjyulKd8e63V22WJlpX8";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -27,14 +27,21 @@ let qr="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="+encodeUR
 document.getElementById("qr").src=qr;
 }
 
-// Save data to Supabase
+// ✅ Submit + Save + Redirect
 async function submitData(){
 
-let utr=document.getElementById("utr").value;
+let utr=document.getElementById("utr").value.trim();
 let file=document.getElementById("file").files[0];
+
+// validation
+if(!utr && !file){
+alert("Please enter UTR OR upload screenshot");
+return;
+}
 
 let imageUrl="";
 
+// upload image
 if(file){
 let fileName=Date.now()+"_"+file.name;
 
@@ -42,18 +49,35 @@ let { data, error } = await supabaseClient.storage
 .from("payments")
 .upload(fileName, file);
 
-if(data){
-imageUrl = SUPABASE_URL+"/storage/v1/object/public/payments/"+fileName;
-}
+if(error){
+alert("Image upload failed ❌");
+return;
 }
 
-await supabaseClient
+// generate public URL
+imageUrl = SUPABASE_URL + "/storage/v1/object/public/payments/" + fileName;
+}
+
+// insert data
+let { error } = await supabaseClient
 .from("payments")
 .insert([{
-time:new Date(),
+time:new Date().toISOString(),
 utr:utr,
 image:imageUrl
 }]);
 
-alert("Submitted Successfully");
+if(error){
+alert("Submission failed ❌");
+return;
+}
+
+// success message
+alert("Payment Submitted Successfully ✅");
+
+// redirect to home
+setTimeout(()=>{
+window.location.href="index.html";
+},2000);
+
 }
