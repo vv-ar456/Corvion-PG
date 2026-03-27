@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="app.js"></script>
+</head>
+
+<body>
+
+<header>
+<img src="logo.png" class="logo">
+</header>
+
+<img src="logo.png" class="watermark">
+
+<div class="container">
+
+<h2 id="amt"></h2>
+
+<div class="option" onclick="payUPI()">Pay using UPI App</div>
+
+<div class="option" onclick="generateQR()">Pay using QR</div>
+
+<img id="qr" class="qr">
+
+<p class="note">
+Take screenshot of payment (UTR visible) OR copy UTR number.  
+This step is required to complete payment.
+</p>
+
+<button onclick="goVerify()">Continue</button>
+
+</div>
+
+<script>
+
+document.getElementById("amt").innerHTML="Amount: ₹"+getAmount();
+
+function goVerify(){
+window.location.href="verify.html?amount="+getAmount();
+}
+
+</script>
+
+</body>
+</html>
