@@ -1,0 +1,76 @@
+body{
+margin:0;
+font-family:Arial;
+background:#f4f7ff;
+}
+
+header{
+background:white;
+padding:15px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+position:relative;
+}
+
+.logo{
+height:60px;
+}
+
+.watermark{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+opacity:0.06;
+width:300px;
+z-index:-1;
+}
+
+.container{
+text-align:center;
+margin-top:60px;
+padding:20px;
+}
+
+h2{
+color:#1a4cff;
+}
+
+.note{
+color:red;
+font-size:14px;
+margin-top:10px;
+}
+
+input, textarea{
+padding:12px;
+width:250px;
+border:2px solid #1a4cff;
+border-radius:8px;
+margin-top:10px;
+}
+
+button{
+margin-top:20px;
+padding:14px 30px;
+background:#1a4cff;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.option{
+background:white;
+padding:18px;
+margin:15px auto;
+width:260px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+cursor:pointer;
+}
+
+.qr{
+width:220px;
+margin-top:15px;
+}
