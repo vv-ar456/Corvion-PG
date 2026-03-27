@@ -1,45 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="app.js"></script>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment</title>
 
-<body>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body{
+margin:0;
+font-family:sans-serif;
+background:#f5f8ff;
+text-align:center;
+}
+
+header{
+background:white;
+padding:15px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo{
+height:40px;
+opacity:0.1; /* watermark */
+}
+
+.container{
+padding:20px;
+}
+
+button{
+width:90%;
+max-width:300px;
+padding:15px;
+margin:10px;
+border:none;
+background:#007bff;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+img{
+margin-top:20px;
+}
+</style>
+
+</head>
+<body onload="generateQR()">
 
 <header>
 <img src="logo.png" class="logo">
 </header>
 
-<img src="logo.png" class="watermark">
-
 <div class="container">
 
-<h2 id="amt"></h2>
+<h2>Select Payment Method</h2>
 
-<div class="option" onclick="payUPI()">Pay using UPI App</div>
+<button onclick="payUPI()">Pay using UPI App</button>
 
-<div class="option" onclick="generateQR()">Pay using QR</div>
+<button onclick="showQR()">Pay using QR</button>
 
-<img id="qr" class="qr">
+<br>
 
-<p class="note">
-Take screenshot of payment (UTR visible) OR copy UTR number.  
-This step is required to complete payment.
-</p>
+<img id="qr" width="200" style="display:none;">
 
-<button onclick="goVerify()">Continue</button>
+<br><br>
+
+<button onclick="goVerify()">Next</button>
 
 </div>
 
 <script>
 
-document.getElementById("amt").innerHTML="Amount: ₹"+getAmount();
+// 🔹 GET AMOUNT
+function getAmount(){
+let params = new URLSearchParams(window.location.search);
+return params.get("amount") || "1";
+}
 
+// 🔹 UPI LINK
+function getUPI(){
+let amt = getAmount();
+return "upi://pay?pa=7606991266@fam&pn=Corvion&am="+amt+"&cu=INR";
+}
+
+// 🔹 PAY BUTTON
+function payUPI(){
+window.location.href = getUPI();
+}
+
+// 🔹 SHOW QR
+function showQR(){
+let qrURL = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(getUPI());
+let qr = document.getElementById("qr");
+qr.src = qrURL;
+qr.style.display = "block";
+}
+
+// 🔹 AUTO QR LOAD
+function generateQR(){
+showQR();
+}
+
+// 🔹 NEXT PAGE
 function goVerify(){
-window.location.href="verify.html?amount="+getAmount();
+window.location.href = "verify.html";
 }
 
 </script>
