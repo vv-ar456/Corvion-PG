@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="app.js"></script>
+</head>
+
+<body>
+
+<header>
+<img src="logo.png" class="logo">
+</header>
+
+<img src="logo.png" class="watermark">
+
+<div class="container">
+
+<h2>Verify Payment</h2>
+
+<input type="text" id="utr" placeholder="Enter UTR number">
+
+<br>
+
+<input type="file" id="file">
+
+<p class="note">
+You can submit either UTR OR Screenshot (both also allowed)
+</p>
+
+<button onclick="submitData()">Submit</button>
+
+</div>
+
+</body>
+</html>
